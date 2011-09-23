@@ -1,0 +1,7 @@
+/var/log/ha-sync.log {
+    missingok
+    notifempty
+    size 15M
+    weekly
+    create 0644 root root
+}

@@ -1,0 +1,3 @@
+SCRIPTDIR="/root/ha-sync-scripts"
+
+05 * * * * root ${SCRIPTDIR}/ha-sync.sh 2>&1 | tee -a /var/log/ha-sync.log

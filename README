@@ -1,0 +1,7 @@
+Some example cron scripts
+
+scheduled_rsync
+- an example to have something rsynced on a regular basis to another server/destination.
+- Has a basic locking mechanism to stop parallel processes from running.
+- basic logging to /var/log
+  - Recommend also setting up a log rotate script.

@@ -1,0 +1,19 @@
+DESCRIPTION
+ha-sync is a basic example on how to setup a scheduled rsync process between two servers
+
+INSTALLATION
+1. Edit "ha-sync.cron" as necessary. You will want to edit the directory variable to point to where you are going keep the rsync script. You may also need to adjust the log (tee) location as well as the user and time to run the cron script.
+2. Edit "ha-sync.logrotated" to suit your log rotating needs.
+3. Edit "ha-sync.sh" as necessary. Mainly you want to edit the source and destination variables.
+4. Copy "ha-sync.cron" to your systems cron.d directory. On RHEL this is /etc/cron.d/
+  - cp ha-sync.cron /etc/cron.d/ha-sync.cron
+5. Copy "ha-sync.logrotated" to your systems logrotate.d directory. On RHEL this is /etc/logrotate.d/
+  - cp ha-sync.logrotated /etc/logrotate.d/ha-sync
+6. Copy "ha-sync.sh" to a location to keep your rsync scripts.
+  - mkdir ~/ha-sync-scripts
+  - cp ha-sync.sh ~/ha-sync-scripts/ha-sync.sh
+7. Make the "ha-sync.sh" script executable
+  - chmod +x ~/ha-sync-scripts/ha-sync.sh
+  
+OPTIONAL
+You will want to configure ssh key authentication if rsyncing via ssh. It is recommended that you create a key for only this purpose. You should also not have a password on the keyfile unless you configure the ssh-key agent to store the keyfile password. You will then want to add it to the ~/.ssh/authorized_keys file on the destination to allow passwordless auth. You can also restrict which host can access the destination in the authorized_keys file. I have included an example id file in the ha-sync.sh script.
