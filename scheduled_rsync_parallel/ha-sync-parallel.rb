@@ -34,7 +34,7 @@ def builddir()
 end # end builddir
 
 def syncproc(dir)
-    num = 1 + rand(5)
+    num = 1 + rand(10)
     proc = Kernel.fork{sleep num}
     Process.detach(proc)
     return proc
@@ -47,13 +47,34 @@ pids = []
 until $sourcedir.empty?
 # Launch sub processes until parallelisim = $maxparallelproc
 while pids.length < $maxparallelproc
+    # Remove dir from array and prep for copy
     dirtocopy = $sourcedir.pop
+    # call the copy function and store the pid
     pids << syncproc(dirtocopy)
-    #puts "copying " + $basesourcedir + "/" + dirtocopy
+    puts "copying " + $basesourcedir + "/" + dirtocopy
 end # end maxprallelproc
-Process.wait
-#puts "Left to copy " + $sourcedir.length.to_s
+
+puts "Left to copy " + $sourcedir.length.to_s
+
+# loop until # processes is greater than maxparallelproc
+while pids.length >= $maxparallelproc
+    # Check each pid to see if it is currently running
+    pids.each {|pid|
+        begin
+          # check to see if we get the pid back. If we do that means it is still running
+          Process.getpgid(pid)
+          #puts "still running: " + pid.to_s
+        # If the process is not running we will get a return of Errno::ESRCH
+        rescue Errno::ESRCH
+          # remove non active pid so we can launch another in its palace
+          pids.delete(pid)
+          puts "no longer running: " + pid.to_s
+        end
+    }
+    # Sleep some so we don't consume a lot of cpu
+    sleep 0.8
+end # end while pids.length >= maxparallelproc
 end # end until sourcedir is empty
 
-# wait until all processes have exited before stoping script
+# wait until all processes have exited before stopping script
 Process.waitall
