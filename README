@@ -5,3 +5,7 @@ scheduled_rsync
 - Has a basic locking mechanism to stop parallel processes from running.
 - basic logging to /var/log
   - Recommend also setting up a log rotate script.
+  
+scheduled_rsync_parallel
+- Same as scheduled_rsync except it is capable of launching parallel rsync processes for each of the sub directories.
+- Can launch a limited number of sub processes and loop until all of the directories have been backed up.
