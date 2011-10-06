@@ -165,13 +165,16 @@ until $sourcedir.empty?
 while $pids.length < $maxparallelproc
     # Remove dir from array and prep for copy
     dirtocopy = $sourcedir.pop
-    # call the copy function and store the pid
-    $pids[dirtocopy] = syncproc(dirtocopy)
-    if $pids[dirtocopy] == -99999
-        puts "skipping: " + $basesourcedir + "/" + dirtocopy
-    else
-        puts "copying " + $basesourcedir + "/" + dirtocopy
-    end # end skip if sub dir locked
+    # check to see if we have done all the work to prevent errors
+    unless dirtocopy == nil
+        # call the copy function and store the pid
+        $pids[dirtocopy] = syncproc(dirtocopy)
+        if $pids[dirtocopy] == -99999
+            puts "skipping: " + $basesourcedir + "/" + dirtocopy
+        else
+            puts "copying " + $basesourcedir + "/" + dirtocopy
+        end # end skip if sub dir locked
+    end # end work done check
 end # end maxprallelproc
 
 puts "Left to copy " + $sourcedir.length.to_s
