@@ -8,18 +8,22 @@ $sleeptime = 0.8                        # time to sleep while checking pids.
                                         # can be increased for longer running processes
                                         # to reduce parent proc cpu usage
 
-# Location to store lock files
-$lockdir = "/var/lock/ha-sync-parallel"            # location for lock file
-$lockfileparent = "ha-sync-parallel-parent"
-
 # rsync related information
-rsync = "/usr/bin/rsync"                  # file location of rsync
+# rsync program location
+$rsync = "/usr/bin/rsync"                  # file location of rsync
 
-rproto = "ssh -i /root/.ssh/rsync-key"    # rsync proto options
-flags = "-av -e"                          # rsync flags
-source = "/tmp/file_to_send"              # files to send
-dest = "server2:/tmp/"                    # directory to store files
+# rsync options
+$rproto = "ssh -i /root/.ssh/rsync-key"    # rsync proto options
+$flags = "-av -e"                          # rsync flags
 
+# source and destinations
+$source = "/tmp/file_to_send"              # files to send
+$dest = "server2:/tmp/"                    # directory to store files
+
+# Location to store lock files
+#$lockdir = "/var/lock/ha-sync-parallel"            # location for lock file
+$lockdir = "/Users/dtamsen/git_working/derektamsen/cron_scripts/scheduled_rsync_parallel/lock"
+$lockfileparent = "ha-sync-parallel-parent"
 
 
 
@@ -91,11 +95,11 @@ def syncproc(dir)
         # For now DO NOT DIRECTLY PASS TO KILL OR IT WILL KILL THE ABSOULTE VALUE
         return -99999
     else
-    num = 1 + rand(4)
-    proc = Kernel.fork{sleep num}
-    createsubproclock(dir, proc)
-    Process.detach(proc)
-    return proc
+    num = 5 + rand(30)
+    proc = IO.popen("sleep " + num.to_s)
+    createsubproclock(dir, proc.pid)
+    Process.detach(proc.pid)
+    return proc.pid
 end # end checksubproclock
 end # end syncproc
 
