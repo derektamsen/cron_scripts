@@ -2,8 +2,8 @@
 
 # declare variables here
 RSYNC="/usr/bin/rsync"                  # file location of rsync
-RPROTO="ssh -i /root/.ssh/rsync-key"    # rsync proto options
-FLAGS="-av -e"                          # rsync flags
+RPROTO="ssh -c arcfour256 -i /root/.ssh/rsync-key"    # rsync proto options
+FLAGS="-avW -e"                          # rsync flags
 SOURCE="/tmp/file_to_send"              # files to send
 DEST="server2:/tmp/"                    # directory to store files
 LOCKFILE="/var/lock/ha-sync"            # file location for lock file
